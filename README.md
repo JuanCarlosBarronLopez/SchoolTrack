@@ -320,4 +320,29 @@ Colecciones soportadas: `profiles`, `user_roles`, `students`, `vehicles`, `route
 
 ## Publicación en servidor
 
-Este proyecto puede ser publicado como aplicación web en un servidor gestionado. El repositorio se mantiene exactamente como aparece en GitHub, sin modificaciones durante el proceso de publicación. Se requiere configurar la infraestructura para ejecutar el servidor Node.js y servir el frontend construido con Vite en un entorno de producción.
+Este proyecto está configurado para ser desplegado fácilmente en cualquier servidor o plataforma Node.js (Render, Heroku, VPS, etc.). El servidor backend de Express está configurado para servir los archivos estáticos compilados del frontend en producción.
+
+### Pasos para producción
+
+1. Configura tus variables de entorno en el servidor (`MONGO_URI`, `JWT_SECRET`, `PORT`, `VITE_API_URL`).
+   *Nota: `VITE_API_URL` generalmente se puede dejar en blanco o apuntar al dominio público.*
+
+2. Instala las dependencias:
+
+```bash
+npm install
+```
+
+3. Construye el frontend para producción:
+
+```bash
+npm run build
+```
+
+4. Inicia el servidor de producción:
+
+```bash
+npm start
+```
+
+El servidor web servirá tanto la API (`/api/*`) como la aplicación web principal.

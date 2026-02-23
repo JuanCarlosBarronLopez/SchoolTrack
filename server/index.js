@@ -14,6 +14,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve static frontend files in production
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
 const PORT = process.env.PORT || 4000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schooltrack';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-change-this';
@@ -309,6 +313,13 @@ function mapCollectionToModel(name) {
     default: return null;
   }
 }
+
+// ─────────────────────────────────────────
+// Catch-all route for frontend (React Router)
+// ─────────────────────────────────────────
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
+});
 
 app.listen(PORT, () => {
   console.log(`API server listening on port ${PORT}`);
