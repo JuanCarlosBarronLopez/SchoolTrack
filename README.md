@@ -346,3 +346,31 @@ npm start
 ```
 
 El servidor web servirá tanto la API (`/api/*`) como la aplicación web principal.
+
+## Arquitectura del Software y Decisiones de Diseño
+
+El diseño de **SchoolTrack** ha sido concebido desde una perspectiva arquitectónica centrada en la **escalabilidad, mantenibilidad y rápida iteración**. A continuación, se detallan las decisiones arquitectónicas clave que sustentan la plataforma:
+
+### 1. Patrón Arquitectónico Backend-Frontend Desacoplado (SPA + API RESTful)
+Se optó por una arquitectura donde el cliente (Frontend en React) y el servidor (API RESTful en Node.js) operan de forma independiente durante el desarrollo, interconectándose a través de contratos de datos estandarizados (JSON). 
+* **Motivo:** Esto permite que futuros clientes (como una aplicación móvil nativa en React Native o una aplicación para relojes inteligentes) puedan consumir la misma API sin requerir modificaciones en el backend.
+* **Compatibilidad:** En el entorno de producción, la arquitectura se pliega a un modelo donde el servidor Node.js entrega la aplicación estática de React (Single Page Application) y al mismo tiempo procesa los servicios de la API, minimizando costos de despliegue al concentrarse todo un único contenedor o proceso.
+
+### 2. Stack Tecnológico (MERN Modernizado)
+Se implementó un stack MERN (MongoDB, Express, React, Node.js), pero con la integración de **TypeScript**, **Vite**, y **TailwindCSS** en la capa de interfaz.
+* **Motivo:** Node.js, gracias a su naturaleza asíncrona no bloqueante (Event Loop), es idóneo para manejar múltiples peticiones concurrentes derivadas del seguimiento GPS en tiempo real. La elección de MongoDB (NoSQL) obedece a la flexibilidad de sus esquemas; los objetos de telemetría y perfiles pueden mutar sin dolores de cabeza originados por migraciones rígidas en bases de datos relacionales.
+* **Mantenibilidad:** La adopción de TypeScript en el Frontend elimina categorías enteras de bugs en tiempo de compilación y ofrece contratos de desarrollo fiables, vital para proyectos que planean escalar en tamaño de equipo.
+
+### 3. Seguridad y Gestión de Estado (JWT)
+El modelo de sesión es **Stateless** (Sin Estado), orquestado a través de JSON Web Tokens (JWT).
+* **Motivo:** Evita el cuello de botella de la comprobación continua de sesiones en memoria del servidor o Redis. El token lleva consigo el rol del usuario, facultando a React para ejecutar de forma autónoma renderizados condicionales (Dashboard Estudiante vs. Dashboard Driver) sin necesidad de triangular los accesos con el servidor continuamente.
+* **Seguridad:** Los passwords se saltean y hashean empleando **bcrypt**, aislando al sistema de potenciales ataques de tablas arcoíris.
+
+### 4. Sistema de Componentes y Diseño Atómico (shadcn-ui & Tailwind)
+La Interfaz de Usuario (UI) se compone usando una biblioteca de diseño construida sobre Radix UI y TailwindCSS (shadcn-ui).
+* **Motivo:** Brinda primitivas de accesibilidad impecables (lectores de pantalla, enfoque de teclado) garantizando que el diseño cumple con las normativas inclusivas (WAI-ARIA). TailwindCSS impone un límite sintáctico que mantiene el empaquetado final CSS en tamaños minúsculos asegurando un tiempo de First Contentful Paint (FCP) extremadamente rápido.
+
+### 5. Almacenamiento Estático y Manejo de Binarios (Multer)
+Las imágenes e insignias o avatares de usuario son manipuladas mediante Multer bajo una organización fundamentada en "Buckets" internos locales.
+* **Motivo:** En proyectos embrionarios o en fase de despliegue inicial reduce completamente el costo operacional al omitirse los cobros de un Amazon S3 o Cloud Storage.
+* **Escalabilidad Horizontal Futura:** La lógica de "buckets" (`/uploads/:bucket/:path`) es fácilmente reemplazable y compatible con interfaces de AWS S3 o Cloudflare R2 sin que el frontend se percate de la modificación arquitectónica en una migración hacia alta disponibilidad.
