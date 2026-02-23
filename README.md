@@ -49,7 +49,7 @@ SchoolTrack UTSJR es una aplicación web completa diseñada para gestionar y hac
 - **TypeScript Compiler** — Compilación de TypeScript a JavaScript
 
 ### Infraestructura y publicación
-- **Lovable** — Plataforma utilizada para publicar y desplegar el repositorio como aplicación web en servidor gestionado (Se detalla en la secci+on de publicación)
+- **Plataforma de despliegue** — El proyecto está preparado para ser desplegado en cualquier servidor gestionado que soporte Node.js y MongoDB.
 
 ## Configuración y ejecución
 
@@ -141,15 +141,14 @@ Esto creará un usuario con rol `admin` en la base de datos.
 
 ## Nota sobre herramientas de desarrollo
 
-Se utilizó **Lovable** como plataforma para publicar y desplegar el repositorio como aplicación web en un servidor gestionado. Durante este proceso, el código fuente y la funcionalidad del proyecto se mantienen exactamente como se encuentra en este repositorio, sin dependencias de plataformas externas más allá de los requisitos técnicos mencionados (Node.js, npm, MongoDB).
+El proyecto puede desplegarse como aplicación web en un servidor gestionado. Durante este proceso, el código fuente y la funcionalidad del proyecto se mantienen exactamente como se encuentra en este repositorio, sin dependencias de plataformas externas más allá de los requisitos técnicos mencionados (Node.js, npm, MongoDB).
 
-Lovable proporciona:
-- Automatización del despliegue desde el repositorio Git
-- Infraestructura para ejecutar el servidor Node.js y servir la aplicación
+Para el despliegue se requiere:
+- Servidor para ejecutar la aplicación Node.js
 - Gestión de dominio y HTTPS
-- Escalado automático de recursos
+- Configuración de variables de entorno
 
-El proyecto puede ejecutarse en cualquier servidor que tenga Node.js y MongoDB configurados, sin necesidad de Lovable.
+El proyecto puede ejecutarse en cualquier servidor que tenga Node.js y MongoDB configurados.
 
 ## Checklist de requisitos implementados
 
@@ -321,4 +320,4 @@ Colecciones soportadas: `profiles`, `user_roles`, `students`, `vehicles`, `route
 
 ## Publicación en servidor
 
-Este proyecto fue publicado como aplicación web en un servidor gestionado utilizando **Lovable**, una plataforma que facilita el despliegue automatizado de repositorios. El repositorio se mantiene exactamente como aparece en GitHub, sin modificaciones durante el proceso de publicación. Lovable proporciona infraestructura para ejecutar el servidor Node.js y servir el frontend construido con Vite en un entorno de producción.
+Este proyecto puede ser publicado como aplicación web en un servidor gestionado. El repositorio se mantiene exactamente como aparece en GitHub, sin modificaciones durante el proceso de publicación. Se requiere configurar la infraestructura para ejecutar el servidor Node.js y servir el frontend construido con Vite en un entorno de producción.
