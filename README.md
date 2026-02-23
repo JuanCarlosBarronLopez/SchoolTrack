@@ -64,8 +64,8 @@ SchoolTrack UTSJR es una aplicación web completa diseñada para gestionar y hac
 1. Clona el repositorio:
 
 ```bash
-git clone https://github.com/0JuanCarlos0/SchoolTrack_Complete.git
-cd SchoolTrack_Complete
+git clone https://github.com/JuanCarlosBarronLopez/SchoolTrack.git
+cd SchoolTrack
 ```
 
 2. Instala las dependencias del proyecto:
