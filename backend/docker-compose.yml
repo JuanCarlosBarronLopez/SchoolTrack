@@ -1,0 +1,123 @@
+version: "3.9"
+
+services:
+  # Backend Node.js
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: schooltrack_backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/schooltrack
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    networks:
+      - schooltrack_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # MongoDB
+  mongo:
+    image: mongo:7.0-alpine
+    container_name: schooltrack_mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: schooltrack
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: schooltrack_secure_password
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - mongo_config:/data/configdb
+    networks:
+      - schooltrack_net
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: schooltrack_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass schooltrack_redis_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - schooltrack_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # MongoDB Express (UI opcional para MongoDB)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: schooltrack_mongo_express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMIN_USERNAME: admin
+      ME_CONFIG_MONGODB_ADMIN_PASSWORD: schooltrack_secure_password
+      ME_CONFIG_MONGODB_URL: mongodb://admin:schooltrack_secure_password@mongo:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin_express
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    networks:
+      - schooltrack_net
+    profiles:
+      - dev
+
+# Volúmenes nombrados
+volumes:
+  mongo_data:
+    driver: local
+  mongo_config:
+    driver: local
+  redis_data:
+    driver: local
+
+# Red personalizada
+networks:
+  schooltrack_net:
+    driver: bridge

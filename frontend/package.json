@@ -1,0 +1,70 @@
+{
+  "name": "schooltrack-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend de SchoolTrack - Sistema de seguimiento de transporte escolar",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "lint": "vue-cli-service lint",
+    "preview": "npm run build && npm run start",
+    "start": "serve -s dist"
+  },
+  "dependencies": {
+    "@vue-leaflet/vue-leaflet": "^0.10.1",
+    "axios": "^1.5.0",
+    "bootstrap": "^5.3.1",
+    "bootstrap-vue-next": "^0.15.5",
+    "chart.js": "^4.4.0",
+    "leaflet": "^1.9.4",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "pinia": "^3.0.4",
+    "qrcode.vue": "^3.4.1",
+    "serve": "^14.2.3",
+    "socket.io-client": "^4.7.2",
+    "sweetalert2": "^11.7.27",
+    "vue": "^3.3.4",
+    "vue-chartjs": "^5.2.0",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.29.5",
+    "@vue/cli-plugin-router": "~5.0.8",
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/cli-service": "~5.0.8",
+    "@vue/eslint-config-standard": "^8.0.1",
+    "@vue/test-utils": "^2.0.0-0",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "babel-jest": "^27.0.6",
+    "eslint": "^8.47.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.0.2",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.17.0",
+    "jest": "^27.0.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "@vue/standard"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}

@@ -1,0 +1,3 @@
+<template><span class="badge" :class="'badge-' + status">{{ statusText }}</span></template>
+<script>export default { name: 'StatusBadge', props: { status: { type: String, default: 'info' } }, computed: { statusText() { return this.status.charAt(0).toUpperCase() + this.status.slice(1); } } }</script>
+<style scoped>.badge { padding: 5px 10px; border-radius: 5px; color: white; } .badge-info { background-color: #17a2b8; } .badge-success { background-color: #28a745; } .badge-danger { background-color: #dc3545; }</style>
