@@ -187,10 +187,18 @@ export default {
         }
       } catch (error) {
         console.error('Register error:', error)
-        const msg = error.response?.data?.message 
-          || error.response?.data?.errors?.[0]?.message
-          || 'Error al registrarse. Intenta de nuevo.'
-        errors.general = msg
+        if (error.response) {
+          // Server responded with error status
+          const msg = error.response.data?.message 
+            || error.response.data?.errors?.[0]?.message
+            || `Error del servidor (${error.response.status})`
+          errors.general = msg
+        } else if (error.request) {
+          // Request was made but no response (CORS or network error)
+          errors.general = 'No se pudo conectar con el servidor. Verifica tu conexión o contacta al administrador.'
+        } else {
+          errors.general = 'Error al registrarse. Intenta de nuevo.'
+        }
       } finally {
         loading.value = false
       }
