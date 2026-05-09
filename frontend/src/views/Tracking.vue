@@ -2,9 +2,9 @@
   <div class="tracking-view">
     <div class="header">
       <h1>Rastreo en Tiempo Real</h1>
-      <div class="status">
-        <span class="pulse-dot"></span>
-        Conectado al servidor GPS
+      <div class="status" :class="{ 'connected': isConnected }">
+        <span class="pulse-dot" :class="{ 'bg-success': isConnected, 'bg-danger': !isConnected }"></span>
+        {{ isConnected ? 'Conectado al servidor GPS' : 'Desconectado' }}
       </div>
     </div>
     <div class="map-container" id="map"></div>
@@ -15,6 +15,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { io } from 'socket.io-client';
 
 // Arreglo para el icono de marcador por defecto de Leaflet en Vite/Webpack
 import iconUrl from 'leaflet/dist/images/marker-icon.png';
@@ -31,6 +32,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const map = ref(null);
 const markers = ref({});
+const socket = ref(null);
+const isConnected = ref(false);
 
 onMounted(() => {
   // Inicializar mapa centrado (ejemplo: Ciudad de México)
@@ -42,27 +45,54 @@ onMounted(() => {
     attribution: '© OpenStreetMap contributors'
   }).addTo(map.value);
 
-  // Datos simulados (Aquí iría la conexión real a Socket.io / API)
-  setTimeout(() => {
-    addOrUpdateVehicle('veh-1', { lat: 19.4326, lng: -99.1332 }, 'Unidad 01 - Placa ABC-123');
-    addOrUpdateVehicle('veh-2', { lat: 19.4426, lng: -99.1432 }, 'Unidad 02 - Placa XYZ-987');
-  }, 1000);
-
-  // Simular movimiento
-  setInterval(() => {
-    if (markers.value['veh-1']) {
-      const current = markers.value['veh-1'].getLatLng();
-      addOrUpdateVehicle('veh-1', { 
-        lat: current.lat + (Math.random() - 0.5) * 0.005, 
-        lng: current.lng + (Math.random() - 0.5) * 0.005 
-      }, 'Unidad 01 - Placa ABC-123');
-    }
-  }, 3000);
+  // Inicializar WebSockets
+  initSockets();
 });
+
+const initSockets = () => {
+  // Usar la URL de la API como base para los Sockets
+  const apiUrl = process.env.VUE_APP_API_URL || 'http://localhost:3000/api';
+  // Quitar el '/api' del final para obtener la raíz del servidor
+  const serverUrl = apiUrl.replace(/\/api$/, '');
+
+  socket.value = io(serverUrl, {
+    transports: ['websocket', 'polling'],
+    reconnection: true
+  });
+
+  socket.value.on('connect', () => {
+    console.log('✅ Conectado al servidor de rastreo (Socket.io)');
+    isConnected.value = true;
+  });
+
+  socket.value.on('disconnect', () => {
+    console.log('❌ Desconectado del servidor de rastreo');
+    isConnected.value = false;
+  });
+
+  // Escuchar actualizaciones de ubicación
+  socket.value.on('location-update', (data) => {
+    if (data.vehicleId && data.location && data.location.coordinates) {
+      const lng = data.location.coordinates[0];
+      const lat = data.location.coordinates[1];
+      
+      const label = data.licensePlate ? `Vehículo: ${data.licensePlate}` : `Vehículo: ${data.vehicleId}`;
+      addOrUpdateVehicle(data.vehicleId, { lat, lng }, label);
+      
+      // Opcional: Centrar el mapa en la última ubicación recibida si es la primera vez
+      if (Object.keys(markers.value).length === 1) {
+        map.value.setView([lat, lng], 14);
+      }
+    }
+  });
+};
 
 onUnmounted(() => {
   if (map.value) {
     map.value.remove();
+  }
+  if (socket.value) {
+    socket.value.disconnect();
   }
 });
 
