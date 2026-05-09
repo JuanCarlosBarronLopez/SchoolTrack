@@ -105,4 +105,3 @@ export const logout = (req, res) => {
   });
 };
 
-export { setCookie, clearCookie, logout, sessionConfig };
