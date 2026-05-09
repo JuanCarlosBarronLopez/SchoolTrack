@@ -3,6 +3,7 @@
     <div class="navbar-content">
       <!-- Mobile Toggle -->
       <button 
+        v-if="!hideSidebarToggle"
         class="btn btn-link d-md-none" 
         @click="toggleSidebar"
         aria-label="Toggle sidebar"
@@ -12,6 +13,7 @@
       
       <!-- Desktop Toggle -->
       <button 
+        v-if="!hideSidebarToggle"
         class="btn btn-link d-none d-md-block" 
         @click="toggleSidebar"
         aria-label="Toggle sidebar"
@@ -95,6 +97,15 @@
             </li>
           </ul>
         </div>
+        
+        <!-- Dark Mode Toggle -->
+        <button 
+          class="btn btn-link dark-toggle" 
+          @click="$emit('toggle-dark-mode')"
+          :title="isDarkMode ? 'Modo claro' : 'Modo oscuro'"
+        >
+          <i :class="isDarkMode ? 'fas fa-sun text-warning' : 'fas fa-moon'"></i>
+        </button>
       </div>
     </div>
   </nav>
@@ -111,9 +122,17 @@ export default {
     user: {
       type: Object,
       default: null
+    },
+    isDarkMode: {
+      type: Boolean,
+      default: false
+    },
+    hideSidebarToggle: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['toggle-sidebar'],
+  emits: ['toggle-sidebar', 'toggle-dark-mode'],
   setup(props, { emit }) {
     const authStore = useAuthStore()
     const router = useRouter()
