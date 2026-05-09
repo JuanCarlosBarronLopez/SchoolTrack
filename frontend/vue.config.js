@@ -1,5 +1,8 @@
 // vue.config.js
 module.exports = {
+  // Disable parallel processing to save RAM on Render's free tier
+  parallel: false,
+  
   chainWebpack: config => {
     // 1. Desactiva el plugin de copia automática de archivos estáticos ('public')
     // Esto es lo que escanea recursivamente y encuentra el duplicado en node_modules.
