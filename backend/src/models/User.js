@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: {
-      values: ['admin', 'driver', 'parent', 'school_admin', 'student'],
+      values: ['user', 'admin', 'driver', 'parent', 'school_admin', 'student'],
       message: 'Rol no válido'
     },
-    default: 'parent'
+    default: 'user'
   },
   permissions: [{
     type: String,

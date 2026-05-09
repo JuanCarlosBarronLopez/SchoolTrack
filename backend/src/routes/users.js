@@ -19,7 +19,7 @@ const userSchema = Joi.object({
   firstName: Joi.string().trim().required().messages({'any.required': 'El nombre es requerido', 'string.empty': 'El nombre es requerido'}),
   lastName: Joi.string().trim().required().messages({'any.required': 'El apellido es requerido', 'string.empty': 'El apellido es requerido'}),
   email: Joi.string().email().required().messages({'string.email': 'Email inválido', 'any.required': 'El email es requerido'}),
-  role: Joi.string().valid('admin', 'driver', 'parent', 'school_admin').required().messages({'any.only': 'Rol inválido', 'any.required': 'El rol es requerido'}),
+  role: Joi.string().valid('user', 'admin', 'driver', 'parent', 'school_admin').required().messages({'any.only': 'Rol inválido', 'any.required': 'El rol es requerido'}),
   phone: Joi.string().trim().min(5).optional().messages({'string.min': 'Teléfono inválido'}),
   status: Joi.string().valid('active', 'inactive', 'suspended').optional(),
   password: Joi.string().optional() // Allow password update

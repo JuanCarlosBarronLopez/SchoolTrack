@@ -19,37 +19,37 @@
           </router-link>
         </li>
         
-        <li class="nav-item">
+        <li class="nav-item" v-if="user?.role !== 'user'">
           <router-link to="/map" class="nav-link" active-class="active">
             <i class="fas fa-map-marked-alt"></i>
             <span v-show="!isCollapsed">Mapa</span>
           </router-link>
         </li>
         
-        <li class="nav-item">
+        <li class="nav-item" v-if="user?.role !== 'user'">
           <router-link to="/tracking" class="nav-link" active-class="active">
             <i class="fas fa-location-arrow"></i>
             <span v-show="!isCollapsed">Tracking</span>
           </router-link>
         </li>
         
-        <li class="nav-divider" v-show="!isCollapsed"></li>
+        <li class="nav-divider" v-show="!isCollapsed && user?.role !== 'user'"></li>
         
-        <li class="nav-item">
+        <li class="nav-item" v-if="user?.role !== 'user'">
           <router-link to="/vehicles" class="nav-link" active-class="active">
             <i class="fas fa-bus"></i>
             <span v-show="!isCollapsed">Vehículos</span>
           </router-link>
         </li>
         
-        <li class="nav-item">
+        <li class="nav-item" v-if="user?.role !== 'user'">
           <router-link to="/routes" class="nav-link" active-class="active">
             <i class="fas fa-route"></i>
             <span v-show="!isCollapsed">Rutas</span>
           </router-link>
         </li>
         
-        <li class="nav-item">
+        <li class="nav-item" v-if="user?.role !== 'user'">
           <router-link to="/stops" class="nav-link" active-class="active">
             <i class="fas fa-map-pin"></i>
             <span v-show="!isCollapsed">Paradas</span>

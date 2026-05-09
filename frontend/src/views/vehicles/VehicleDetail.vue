@@ -1,7 +1,7 @@
-﻿<template>
+<template>
   <div class="Vehicle-detail">
     <div class="header">
-      <h1>Detalle de VehÃ­culo</h1>
+      <h1>Detalle de Vehículo</h1>
       <div class="actions">
         <router-link :to="{ name: 'VehicleEdit', params: { id: $route.params.id } }" class="btn-primary">
           Editar
@@ -12,7 +12,7 @@
       </div>
     </div>
     <div class="content">
-      <p>InformaciÃ³n detallada</p>
+      <p>Información detallada</p>
     </div>
   </div>
 </template>

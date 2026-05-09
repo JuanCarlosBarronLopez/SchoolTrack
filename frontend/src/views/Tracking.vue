@@ -162,7 +162,8 @@ h1 {
 
 .map-container { 
   flex-grow: 1;
-  min-height: 400px; 
+  min-height: 60vh; 
+  height: 600px;
   background: #ecf0f1; 
   border-radius: 12px; 
   overflow: hidden;

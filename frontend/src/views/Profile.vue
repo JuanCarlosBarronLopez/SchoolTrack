@@ -93,15 +93,30 @@
               <div class="row g-3">
                 <div class="col-12">
                   <label class="form-label">Contraseña Actual</label>
-                  <input type="password" class="form-control" v-model="passwordForm.currentPassword" required>
+                  <div class="input-group">
+                    <input :type="showPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.currentPassword" required>
+                    <button class="btn btn-outline-secondary" type="button" @click="showPassword = !showPassword">
+                      <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Nueva Contraseña</label>
-                  <input type="password" class="form-control" v-model="passwordForm.newPassword" required minlength="6">
+                  <div class="input-group">
+                    <input :type="showNewPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.newPassword" required minlength="6">
+                    <button class="btn btn-outline-secondary" type="button" @click="showNewPassword = !showNewPassword">
+                      <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                  </div>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Confirmar Nueva Contraseña</label>
-                  <input type="password" class="form-control" v-model="passwordForm.confirmPassword" required minlength="6">
+                  <div class="input-group">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.confirmPassword" required minlength="6">
+                    <button class="btn btn-outline-secondary" type="button" @click="showConfirmPassword = !showConfirmPassword">
+                      <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
               
@@ -144,6 +159,10 @@ const passwordForm = ref({
   newPassword: '',
   confirmPassword: ''
 });
+
+const showPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 // Estados de UI
 const profileUpdating = ref(false);

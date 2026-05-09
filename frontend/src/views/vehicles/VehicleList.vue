@@ -1,13 +1,13 @@
-﻿<template>
+<template>
   <div class="Vehicle-list">
     <div class="header">
-      <h1>VehÃ­culos</h1>
+      <h1>Vehículos</h1>
       <router-link :to="{ name: 'VehicleCreate' }" class="btn-primary">
-        Crear VehÃ­culo
+        Crear Vehículo
       </router-link>
     </div>
     <div class="content">
-      <p>Lista de vehÃ­culos</p>
+      <p>Lista de vehículos</p>
     </div>
   </div>
 </template>

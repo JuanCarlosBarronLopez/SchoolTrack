@@ -18,6 +18,7 @@
             <label class="form-label">Filtrar por Rol</label>
             <select v-model="filterRole" class="form-select" @change="fetchUsers">
               <option value="">Todos los roles</option>
+              <option value="user">Usuario (Pendiente)</option>
               <option value="admin">Administrador</option>
               <option value="school_admin">Admin Escolar</option>
               <option value="driver">Conductor</option>
@@ -142,6 +143,7 @@
                 <div class="col-md-6">
                   <label class="form-label">Rol</label>
                   <select class="form-select" v-model="formData.role" required>
+                    <option value="user">Usuario / Pendiente</option>
                     <option value="parent">Padre/Tutor</option>
                     <option value="driver">Conductor</option>
                     <option value="admin">Administrador</option>
@@ -299,7 +301,8 @@ const formatRole = (role) => {
     'school_admin': 'Admin Escolar',
     'driver': 'Conductor',
     'parent': 'Padre',
-    'student': 'Alumno'
+    'student': 'Alumno',
+    'user': 'Pendiente/Usuario'
   };
   return roles[role] || role;
 };
@@ -309,7 +312,8 @@ const getRoleBadgeClass = (role) => {
     'admin': 'bg-dark',
     'school_admin': 'bg-purple',
     'driver': 'bg-info text-dark',
-    'parent': 'bg-primary'
+    'parent': 'bg-primary',
+    'user': 'bg-warning text-dark'
   };
   return classes[role] || 'bg-secondary';
 };

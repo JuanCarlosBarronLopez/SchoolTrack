@@ -1,6 +1,6 @@
-﻿<template>
+<template>
   <div class="Vehicle-form">
-    <h1>{{ isEdit ? 'Editar' : 'Crear' }} VehÃ­culo</h1>
+    <h1>{{ isEdit ? 'Editar' : 'Crear' }} Vehículo</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label>Nombre</label>
@@ -28,7 +28,7 @@ const form = ref({ name: '' })
 
 const handleSubmit = async () => {
   console.log('Guardando:', form.value)
-  // Implementar lÃ³gica de guardado
+  // Implementar lógica de guardado
   router.push({ name: 'Vehicles' })
 }
 </script>

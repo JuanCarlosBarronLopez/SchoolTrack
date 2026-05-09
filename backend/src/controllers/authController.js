@@ -48,7 +48,7 @@ export const register = async (req, res) => {
       lastName: lastName || '',
       email,
       password,
-      role: role || 'parent',
+      role: role || 'user',
       status: 'active',
     });
 
