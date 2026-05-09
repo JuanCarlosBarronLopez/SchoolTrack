@@ -72,12 +72,22 @@ export const generateQR = asyncHandler(async (req, res) => {
     }
   });
 });
+export const generateStudentQR = async (req, res) => {
+  try {
+    const { studentId } = req.params;
+    
+    if (req.user.role !== 'admin' && req.user.role !== 'school_admin' && req.user.role !== 'parent') {
+      return res.status(403).json({ 
+        message: 'No tienes permisos para generar códigos QR' 
+      });
+    }
+    
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Estudiante no encontrado' });
     }
     
     // Generar código QR único
-    // const qrCode = student.generateQRCode(); // Asumiendo que esta función existe en el modelo
-    
-    // Fallback por si student.generateQRCode() no existe:
     const qrCode = `STU_${student._id}_${Date.now()}`;
 
     student.qrCode = qrCode;
@@ -98,7 +108,7 @@ export const generateQR = asyncHandler(async (req, res) => {
   }
 };
 
-const generateDriverQR = async (req, res) => {
+export const generateDriverQR = async (req, res) => {
   try {
     const { driverId } = req.params;
     
@@ -133,7 +143,7 @@ const generateDriverQR = async (req, res) => {
   }
 };
 
-const scanStudentQR = async (req, res) => {
+export const scanStudentQR = async (req, res) => {
   try {
     const { qrCode, vehicleId, action } = req.body; // action: 'pickup' o 'dropoff'
     const driver = req.user;
@@ -209,7 +219,7 @@ const scanStudentQR = async (req, res) => {
   }
 };
 
-const scanDriverQR = async (req, res) => {
+export const scanDriverQR = async (req, res) => {
   try {
     const { qrCode, vehicleId } = req.body;
     const scanningDriver = req.user; // El conductor que está escaneando
@@ -255,7 +265,7 @@ const scanDriverQR = async (req, res) => {
   }
 };
 
-const getStudentsInVehicle = async (req, res) => {
+export const getStudentsInVehicle = async (req, res) => {
   try {
     const { vehicleId } = req.params;
     
@@ -329,17 +339,3 @@ async function sendNotificationToParents(student, vehicle, driver, action) {
     console.error('Error enviando notificación a padres:', error);
   }
 }
-
-// ======================================
-//  INICIO DE LA CORRECCIÓN
-// ======================================
-// Ahora exportamos un objeto que SÍ contiene
-// las constantes locales que definimos arriba.
-
-module.exports = {
-  generateStudentQR,
-  generateDriverQR,
-  scanStudentQR,
-  scanDriverQR,
-  getStudentsInVehicle
-};
