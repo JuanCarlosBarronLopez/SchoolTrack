@@ -136,6 +136,101 @@
       </div>
     </section>
 
+    <!-- Detailed Roles Section -->
+    <section id="how-it-works" class="py-5">
+      <div class="container py-5">
+        <div class="row align-items-center mb-5">
+          <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+            <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80" alt="Para Padres" class="img-fluid rounded-4 shadow">
+          </div>
+          <div class="col-lg-6 order-lg-1 pe-lg-5">
+            <div class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 rounded-pill">Para Padres</div>
+            <h3 class="fw-bold mb-4">Tranquilidad en todo momento</h3>
+            <ul class="list-unstyled">
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Monitoreo en Vivo:</strong> Observa en el mapa dónde está el autobús escolar de tu hijo en tiempo real.
+                </div>
+              </li>
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Notificaciones Automáticas:</strong> Recibe alertas cuando el autobús esté cerca, cuando tu hijo aborde y cuando llegue a la escuela.
+                </div>
+              </li>
+              <li class="d-flex">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Seguridad Verificada:</strong> Confirma la asistencia de tu hijo gracias al escaneo de código QR personal.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row align-items-center mb-5">
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=800&q=80" alt="Para Conductores" class="img-fluid rounded-4 shadow">
+          </div>
+          <div class="col-lg-6 ps-lg-5">
+            <div class="badge bg-success-subtle text-success mb-3 px-3 py-2 rounded-pill">Para Conductores</div>
+            <h3 class="fw-bold mb-4">Herramientas para un viaje eficiente</h3>
+            <ul class="list-unstyled">
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Pase de Lista Rápido:</strong> Escanea los QR de los alumnos al subir y bajar en segundos.
+                </div>
+              </li>
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Rutas Optimizadas:</strong> Accede a la ruta del día con las paradas exactas, ahorrando tiempo y combustible.
+                </div>
+              </li>
+              <li class="d-flex">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Comunicación Directa:</strong> Reporta incidentes o retrasos al instante a la administración escolar.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row align-items-center">
+          <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80" alt="Para Colegios" class="img-fluid rounded-4 shadow">
+          </div>
+          <div class="col-lg-6 order-lg-1 pe-lg-5">
+            <div class="badge bg-warning-subtle text-warning mb-3 px-3 py-2 rounded-pill text-dark">Para Colegios</div>
+            <h3 class="fw-bold mb-4">Control y logística integral</h3>
+            <ul class="list-unstyled">
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Gestión de Flotilla:</strong> Administra vehículos, choferes, rutas y paradas desde un solo panel de control.
+                </div>
+              </li>
+              <li class="d-flex mb-3">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Historial y Auditoría:</strong> Accede a reportes detallados de asistencia, puntualidad y métricas de viaje.
+                </div>
+              </li>
+              <li class="d-flex">
+                <i class="fas fa-check text-success mt-1 me-3"></i>
+                <div>
+                  <strong>Asignación de Roles:</strong> Sistema de permisos estructurado donde tú decides quién tiene acceso a qué información.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-dark text-white py-5">
       <div class="container text-center">

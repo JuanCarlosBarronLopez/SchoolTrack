@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="dashboard">
     <!-- Page Header -->
     <div class="page-header">
@@ -15,7 +15,7 @@
           </div>
           <div class="stats-content">
             <h3>{{ stats.totalVehicles }}</h3>
-            <p>Veh├¡culos Activos</p>
+            <p>Vehículos Activos</p>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@
           <div class="card-header">
             <h5 class="card-title mb-0">
               <i class="fas fa-map-marked-alt me-2"></i>
-              Ubicaci├│n de Veh├¡culos en Tiempo Real
+              Ubicación de Vehículos en Tiempo Real
             </h5>
           </div>
           <div class="card-body">
@@ -156,7 +156,7 @@
           <div class="card-header">
             <h5 class="card-title mb-0">
               <i class="fas fa-bolt me-2"></i>
-              Acciones R├ípidas
+              Acciones Rápidas
             </h5>
           </div>
           <div class="card-body">
@@ -166,8 +166,8 @@
                   <i class="fas fa-plus"></i>
                 </div>
                 <div class="action-content">
-                  <h6>Agregar Veh├¡culo</h6>
-                  <p class="text-muted small">Registrar nuevo veh├¡culo</p>
+                  <h6>Agregar Vehículo</h6>
+                  <p class="text-muted small">Registrar nuevo vehículo</p>
                 </div>
               </router-link>
               
@@ -187,7 +187,7 @@
                 </div>
                 <div class="action-content">
                   <h6>Agregar Parada</h6>
-                  <p class="text-muted small">A├▒adir punto de parada</p>
+                  <p class="text-muted small">Añadir punto de parada</p>
                 </div>
               </router-link>
               
@@ -214,6 +214,7 @@ import { useVehiclesStore } from '../stores/vehicles'
 import { useRoutesStore } from '../stores/routes'
 import { useStopsStore } from '../stores/stops'
 import MapView from '../components/maps/MapView.vue'
+import api from '../services/api'
 
 export default {
   name: 'Dashboard',
@@ -233,54 +234,11 @@ export default {
       totalUsers: 28
     })
     
-    // Mock data for demo
-    const liveUpdates = ref([
-      {
-        id: 1,
-        title: 'Veh├¡culo R-123',
-        message: 'Actualizaci├│n de ubicaci├│n',
-        type: 'active',
-        timestamp: new Date()
-      },
-      {
-        id: 2,
-        title: 'Ruta Matutina',
-        message: 'Inicio de recorrido',
-        type: 'info',
-        timestamp: new Date(Date.now() - 300000)
-      },
-      {
-        id: 3,
-        title: 'Parada Escolar',
-        message: 'Llegada registrada',
-        type: 'success',
-        timestamp: new Date(Date.now() - 600000)
-      }
-    ])
+    // No live updates by default
+    const liveUpdates = ref([])
     
-    const recentActivity = ref([
-      {
-        id: 1,
-        title: 'Veh├¡culo ABC123 agregado',
-        icon: 'fas fa-plus',
-        type: 'primary',
-        timestamp: new Date(Date.now() - 3600000)
-      },
-      {
-        id: 2,
-        title: 'Ruta Matutina actualizada',
-        icon: 'fas fa-edit',
-        type: 'success',
-        timestamp: new Date(Date.now() - 7200000)
-      },
-      {
-        id: 3,
-        title: 'Parada Principal modificada',
-        icon: 'fas fa-map-pin',
-        type: 'info',
-        timestamp: new Date(Date.now() - 10800000)
-      }
-    ])
+    // No recent activity by default
+    const recentActivity = ref([])
     
     const activeVehicles = computed(() => {
       return vehiclesStore.activeVehicles
@@ -310,12 +268,25 @@ export default {
         await routesStore.fetchRoutes()
         await stopsStore.fetchStops()
         
+        // Get real users count
+        let totalUsersCount = 0
+        try {
+          const usersRes = await api.get('/users')
+          if (usersRes.data && usersRes.data.data) {
+            totalUsersCount = usersRes.data.data.length
+          } else if (Array.isArray(usersRes.data)) {
+            totalUsersCount = usersRes.data.length
+          }
+        } catch (err) {
+          console.error('Error fetching users:', err)
+        }
+
         // Update stats with real data
         stats.value = {
           totalVehicles: vehiclesStore.vehicles.length,
           totalRoutes: routesStore.routes.length,
           totalStops: stopsStore.stops.length,
-          totalUsers: 28 // This would come from users module
+          totalUsers: totalUsersCount
         }
       } catch (error) {
         console.error('Error loading dashboard data:', error)
