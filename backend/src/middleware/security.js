@@ -26,9 +26,11 @@ export const apiLimiter = rateLimit({
  */
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 5, // máximo 5 intentos por ventana
+  max: 20, // máximo 20 intentos por ventana (antes era 5, muy estricto)
   message: 'Demasiados intentos de login. Intenta nuevamente en 15 minutos.',
   skipSuccessfulRequests: true, // No contar requests exitosos
+  standardHeaders: true,
+  legacyHeaders: false,
   handler: (req, res) => {
     res.status(429).json({
       success: false,
