@@ -1,6 +1,6 @@
 // C:\schooltrack\schooltrack\frontend\src\router\index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import store from '../store'
+import { useAuthStore } from '../stores/auth'
 
 const routes = [
   {
@@ -142,31 +142,26 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  console.log(`Navigating from ${from.path} to ${to.path}`) // Depuración
-  if (!store.state.auth.initialized) {
-    console.log('Waiting for auth initialization...')
-    await store.dispatch('auth/initializeAuth')
+  const authStore = useAuthStore()
+
+  if (!authStore.initialized) {
+    await authStore.initializeAuth()
   }
 
-  const isAuthenticated = store.getters['auth/isAuthenticated']
-  const currentUser = store.getters['auth/currentUser']
-
-  console.log('isAuthenticated:', isAuthenticated, 'currentUser:', currentUser) // Depuración
+  const isAuthenticated = authStore.isAuthenticated
+  const currentUser = authStore.user
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    console.log('Redirecting to /login from:', to.path)
     next({ path: '/login', query: { redirect: to.fullPath } })
     return
   }
 
   if (to.meta.guest && isAuthenticated) {
-    console.log('Redirecting to / from:', to.path)
     next('/')
     return
   }
 
   if (to.meta.adminOnly && (!currentUser || currentUser.role !== 'admin')) {
-    console.log('Access denied to technische route:', to.path)
     next('/')
     return
   }
