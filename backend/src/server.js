@@ -14,6 +14,7 @@ import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
 
 // Importar logger
 import logger from './utils/logger.js';
@@ -171,12 +172,24 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check mejorado
 app.get('/api/health', (req, res) => {
+  const mongoState = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  const state = mongoose.connection.readyState;
+  const uri = process.env.MONGODB_URI || process.env.MONGO_URI || 'NOT SET';
+  const sanitizedUri = uri !== 'NOT SET' ? uri.replace(/:([^@]+)@/, ':****@') : 'NOT SET';
+  
   const healthcheck = {
     success: true,
     message: 'Servidor funcionando',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
     uptime: process.uptime(),
+    database: {
+      status: mongoState[state] || 'unknown',
+      stateCode: state,
+      uri: sanitizedUri,
+      host: mongoose.connection.host || 'N/A',
+      name: mongoose.connection.name || 'N/A'
+    },
     memory: {
       used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
       total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)

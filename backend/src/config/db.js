@@ -2,36 +2,52 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    // Usar MONGODB_URI (de Render) primero, luego MONGO_URI como fallback
     const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
 
     if (!uri) {
-      console.warn('⚠️ Aviso: MONGODB_URI o MONGO_URI no están definidas.');
-      console.warn('   El servidor arrancará en modo degradado sin conexión a DB.');
-      console.warn('   Para habilitar la DB, añade MONGODB_URI en las variables de entorno.');
+      console.warn('⚠️ MONGODB_URI no definida. Modo degradado.');
       return null;
     }
 
+    // Log sanitizado (ocultar password)
+    const sanitized = uri.replace(/:([^@]+)@/, ':****@');
+    console.log(`🔌 Intentando conectar a MongoDB: ${sanitized}`);
+
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 15000,
       socketTimeoutMS: 45000,
     });
 
     console.log(`✅ MongoDB conectado en: ${conn.connection.host}`);
     console.log(`   Base de datos: ${conn.connection.name}`);
-
     return conn;
+
   } catch (error) {
     console.error(`❌ Error conectando MongoDB:`);
-    console.error(`   ${error.message}`);
-
-    if (error.message && error.message.includes('ECONNREFUSED')) {
-      console.error(`   💡 MongoDB no está ejecutándose localmente`);
-      console.error(`   💡 Si necesitas DB, configura MONGODB_URI en Render`);
+    console.error(`   Tipo: ${error.name}`);
+    console.error(`   Mensaje: ${error.message}`);
+    
+    if (error.reason) {
+      console.error(`   Razón: ${JSON.stringify(error.reason)}`);
     }
 
-    console.warn('⚠️ Continuando sin conexión a la base de datos (modo degradado).');
-    return null;
+    // Intentar reconexión después de 5 segundos
+    console.log('🔄 Reintentando conexión en 5 segundos...');
+    await new Promise(r => setTimeout(r, 5000));
+    
+    try {
+      const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+      const conn = await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 45000,
+      });
+      console.log(`✅ MongoDB conectado en reintento: ${conn.connection.host}`);
+      return conn;
+    } catch (retryError) {
+      console.error(`❌ Reintento fallido: ${retryError.message}`);
+      console.warn('⚠️ Continuando sin conexión a la base de datos.');
+      return null;
+    }
   }
 };
 
