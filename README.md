@@ -98,7 +98,16 @@ Levanta el servidor:
 npm run dev
 ```
 
-### 3. Configuración del Frontend
+### 3. Generar Administrador por Defecto
+Para acceder al panel administrativo la primera vez, genera el usuario administrador por defecto desde la carpeta `backend`:
+```bash
+npm run seed:admin
+```
+Esto creará el siguiente usuario (se recomienda cambiar la contraseña en el perfil tras el primer acceso):
+- **Email:** `admin@schooltrack.com`
+- **Contraseña:** `Admin123!`
+
+### 4. Configuración del Frontend
 En una nueva terminal:
 ```bash
 cd frontend
@@ -167,4 +176,4 @@ docker-compose up -d --build
 Este proyecto está bajo la Licencia **MIT**. Consulta el archivo [LICENSE](LICENSE) para obtener todos los detalles.
 
 ---
-*Hecho con 🩵 y mucho código.*
+

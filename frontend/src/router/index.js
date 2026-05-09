@@ -96,19 +96,7 @@ const routes = [
   {
     path: '/users',
     name: 'Users',
-    component: () => import('../views/users/UserList.vue'),
-    meta: { requiresAuth: true, adminOnly: true }
-  },
-  {
-    path: '/users/create',
-    name: 'UserCreate',
-    component: () => import('../views/users/UserForm.vue'),
-    meta: { requiresAuth: true, adminOnly: true }
-  },
-  {
-    path: '/users/:id/edit',
-    name: 'UserEdit',
-    component: () => import('../views/users/UserForm.vue'),
+    component: () => import('../views/UserManagement.vue'),
     meta: { requiresAuth: true, adminOnly: true }
   },
   {

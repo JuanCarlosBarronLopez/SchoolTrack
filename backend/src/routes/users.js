@@ -21,6 +21,7 @@ const userSchema = Joi.object({
   email: Joi.string().email().required().messages({'string.email': 'Email inválido', 'any.required': 'El email es requerido'}),
   role: Joi.string().valid('admin', 'driver', 'parent', 'school_admin').required().messages({'any.only': 'Rol inválido', 'any.required': 'El rol es requerido'}),
   phone: Joi.string().trim().min(5).optional().messages({'string.min': 'Teléfono inválido'}),
+  status: Joi.string().valid('active', 'inactive', 'suspended').optional(),
   password: Joi.string().optional() // Allow password update
 });
 
@@ -45,6 +46,46 @@ router.get('/', protect, authorize(adminRoles), async (req, res) => {
   } catch (error) {
     logger.error('Error obteniendo usuarios', { error: error.message });
     res.status(500).json({ message: 'Error del servidor' });
+  }
+});
+
+router.post('/', protect, authorize(adminRoles), validate(userSchema), async (req, res) => {
+  try {
+    const { email } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'El correo ya está registrado' });
+    }
+
+    const userData = req.body;
+    
+    // Si no se proporcionó contraseña, generar una por defecto: 'Temporal123!'
+    const plainPassword = userData.password || 'Temporal123!';
+    userData.password = plainPassword;
+
+    // Crear el usuario directamente en BD (Mongoose middleware en User.js hará el hash)
+    // Pero si no hay middleware, lo hasheamos aquí.
+    // AuthController no usa pre-save para password, vamos a revisar. Ah, wait, el middleware authController usa bcrypt.hash en put.
+    // Let's do the hash here to be safe just in case.
+    const salt = await bcrypt.genSalt(12);
+    userData.password = await bcrypt.hash(plainPassword, salt);
+    
+    // Status por defecto
+    if (!userData.status) userData.status = 'active';
+
+    const user = await User.create(userData);
+    
+    const userSafe = user.toObject();
+    delete userSafe.password;
+    
+    res.status(201).json({ 
+      message: 'Usuario creado exitosamente', 
+      user: userSafe,
+      temporaryPassword: !req.body.password ? plainPassword : null
+    });
+  } catch (error) {
+    logger.error('Error creando usuario', { error: error.message });
+    res.status(500).json({ message: 'Error del servidor', detail: error.message });
   }
 });
 
