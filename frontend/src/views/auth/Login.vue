@@ -146,7 +146,7 @@ export default {
         })
         
         if (result.success || result.token) {
-          router.push('/')
+          router.push('/dashboard')
         } else {
           // Handle login error
           if (result.message && result.message.includes('credenciales')) {

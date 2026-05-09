@@ -26,6 +26,9 @@ router.delete('/avatar', profileController.deleteAvatar);
 // Cambiar contraseña
 router.put('/password', profileController.changePassword);
 
+// Verificar contraseña actual
+router.post('/verify-password', profileController.verifyPassword);
+
 // Eliminar perfil
 router.delete('/', profileController.deleteProfile);
 

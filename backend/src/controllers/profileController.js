@@ -286,6 +286,45 @@ export const changePassword = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc    Verificar contraseña actual
+ * @route   POST /api/profile/verify-password
+ * @access  Private
+ */
+export const verifyPassword = asyncHandler(async (req, res) => {
+  const { currentPassword } = req.body;
+
+  if (!currentPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'Se requiere la contraseña actual'
+    });
+  }
+
+  const user = await User.findById(req.user._id).select('+password');
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'Usuario no encontrado'
+    });
+  }
+
+  const isPasswordCorrect = await user.comparePassword(currentPassword);
+
+  if (!isPasswordCorrect) {
+    return res.status(401).json({
+      success: false,
+      message: 'Contraseña actual incorrecta'
+    });
+  }
+
+  res.json({
+    success: true,
+    message: 'Contraseña verificada correctamente'
+  });
+});
+
+/**
  * @desc    Obtener perfil de otro usuario
  * @route   GET /api/profile/:userId
  * @access  Private
@@ -371,6 +410,7 @@ export default {
   changeAvatar,
   deleteAvatar,
   changePassword,
+  verifyPassword,
   getUserProfile,
   deleteProfile
 };

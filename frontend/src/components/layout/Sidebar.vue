@@ -13,7 +13,7 @@
     <nav class="sidebar-nav">
       <ul class="nav-list">
         <li class="nav-item">
-          <router-link to="/" class="nav-link" exact-active-class="active">
+          <router-link to="/dashboard" class="nav-link" exact-active-class="active">
             <i class="fas fa-tachometer-alt"></i>
             <span v-show="!isCollapsed">Dashboard</span>
           </router-link>

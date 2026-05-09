@@ -94,26 +94,33 @@
                 <div class="col-12">
                   <label class="form-label">Contraseña Actual</label>
                   <div class="input-group">
-                    <input :type="showPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.currentPassword" required>
+                    <input :type="showPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.currentPassword" required :readonly="isPasswordVerified">
                     <button class="btn btn-outline-secondary" type="button" @click="showPassword = !showPassword">
                       <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                    </button>
+                    <button v-if="!isPasswordVerified" class="btn btn-primary" type="button" @click="verifyPassword" :disabled="verifyingPassword || !passwordForm.currentPassword">
+                      <span v-if="verifyingPassword" class="spinner-border spinner-border-sm me-1"></span>
+                      Verificar
+                    </button>
+                    <button v-else class="btn btn-success" type="button" disabled>
+                      <i class="fas fa-check"></i> Verificada
                     </button>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Nueva Contraseña</label>
+                  <label class="form-label" :class="{ 'text-muted': !isPasswordVerified }">Nueva Contraseña</label>
                   <div class="input-group">
-                    <input :type="showNewPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.newPassword" required minlength="6">
-                    <button class="btn btn-outline-secondary" type="button" @click="showNewPassword = !showNewPassword">
+                    <input :type="showNewPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.newPassword" required minlength="6" :disabled="!isPasswordVerified">
+                    <button class="btn btn-outline-secondary" type="button" @click="showNewPassword = !showNewPassword" :disabled="!isPasswordVerified">
                       <i :class="showNewPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                     </button>
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">Confirmar Nueva Contraseña</label>
+                  <label class="form-label" :class="{ 'text-muted': !isPasswordVerified }">Confirmar Nueva Contraseña</label>
                   <div class="input-group">
-                    <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.confirmPassword" required minlength="6">
-                    <button class="btn btn-outline-secondary" type="button" @click="showConfirmPassword = !showConfirmPassword">
+                    <input :type="showConfirmPassword ? 'text' : 'password'" class="form-control" v-model="passwordForm.confirmPassword" required minlength="6" :disabled="!isPasswordVerified">
+                    <button class="btn btn-outline-secondary" type="button" @click="showConfirmPassword = !showConfirmPassword" :disabled="!isPasswordVerified">
                       <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                     </button>
                   </div>
@@ -125,7 +132,7 @@
               </div>
               
               <div class="mt-4 text-end">
-                <button type="submit" class="btn btn-danger" :disabled="passwordUpdating">
+                <button type="submit" class="btn btn-danger" :disabled="passwordUpdating || !isPasswordVerified">
                   <span v-if="passwordUpdating" class="spinner-border spinner-border-sm me-2"></span>
                   Actualizar Contraseña
                 </button>
@@ -163,6 +170,9 @@ const passwordForm = ref({
 const showPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmPassword = ref(false);
+
+const isPasswordVerified = ref(false);
+const verifyingPassword = ref(false);
 
 // Estados de UI
 const profileUpdating = ref(false);
@@ -283,7 +293,31 @@ const updateProfile = async () => {
   }
 };
 
+const verifyPassword = async () => {
+  if (!passwordForm.value.currentPassword) return;
+  
+  verifyingPassword.value = true;
+  passwordMessage.value = '';
+  
+  try {
+    await api.post('/profile/verify-password', {
+      currentPassword: passwordForm.value.currentPassword
+    });
+    
+    isPasswordVerified.value = true;
+    passwordMessageType.value = 'success';
+    passwordMessage.value = 'Contraseña verificada. Ahora puedes ingresar tu nueva contraseña.';
+  } catch (error) {
+    isPasswordVerified.value = false;
+    passwordMessageType.value = 'danger';
+    passwordMessage.value = error.response?.data?.message || 'Contraseña incorrecta';
+  } finally {
+    verifyingPassword.value = false;
+  }
+};
+
 const updatePassword = async () => {
+  if (!isPasswordVerified.value) return;
   if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
     passwordMessageType.value = 'danger';
     passwordMessage.value = 'Las contraseñas no coinciden';
@@ -304,6 +338,7 @@ const updatePassword = async () => {
     
     // Limpiar formulario
     passwordForm.value = { currentPassword: '', newPassword: '', confirmPassword: '' };
+    isPasswordVerified.value = false;
     
     setTimeout(() => { passwordMessage.value = ''; }, 3000);
   } catch (error) {

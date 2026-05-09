@@ -127,4 +127,4 @@ Si encuentras un error y no puedes corregirlo tú mismo, por favor crea un **Iss
 3. Menciona el comportamiento esperado vs el comportamiento actual.
 4. Incluye fragmentos de logs (utilizando Winston si es el backend) o capturas de consola del navegador si corresponde.
 
-¡Gracias de nuevo por tu ayuda haciendo de SchoolTrack una mejor herramienta! ❤️
+¡Gracias de nuevo por tu ayuda haciendo de SchoolTrack una mejor herramienta! 

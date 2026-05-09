@@ -17,6 +17,12 @@ const routes = [
   },
   {
     path: '/',
+    name: 'Landing',
+    component: () => import('../views/Landing.vue'),
+    meta: { guest: true } // Or no meta if public
+  },
+  {
+    path: '/dashboard',
     name: 'Dashboard',
     component: () => import('../views/Dashboard.vue'),
     meta: { requiresAuth: true }
@@ -145,12 +151,12 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.guest && isAuthenticated) {
-    next('/')
+    next('/dashboard')
     return
   }
 
   if (to.meta.adminOnly && (!currentUser || currentUser.role !== 'admin')) {
-    next('/')
+    next('/dashboard')
     return
   }
 

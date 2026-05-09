@@ -15,6 +15,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import User from './models/User.js';
 
 // Importar logger
 import logger from './utils/logger.js';
@@ -70,7 +71,28 @@ if (!fs.existsSync(logsDir)) {
 }
 
 // Conectar a base de datos
-connectDB();
+connectDB().then(async () => {
+  try {
+    const adminEmail = process.env.DEFAULT_ADMIN_EMAIL || 'admin@schooltrack.com';
+    const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD || 'Admin123!';
+    const existingAdmin = await User.findOne({ email: adminEmail });
+    if (!existingAdmin) {
+      const newAdmin = new User({
+        firstName: 'Super',
+        lastName: 'Admin',
+        email: adminEmail,
+        password: adminPassword,
+        role: 'admin',
+        status: 'active',
+        isVerified: true
+      });
+      await newAdmin.save();
+      logger.info('✅ Súper Administrador por defecto creado exitosamente');
+    }
+  } catch (error) {
+    logger.error('❌ Error creando Súper Administrador:', { error: error.message });
+  }
+});
 
 // Crear aplicación
 const app = express();

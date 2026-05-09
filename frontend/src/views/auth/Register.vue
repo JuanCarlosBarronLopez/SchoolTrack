@@ -183,7 +183,7 @@ export default {
         })
         
         if (result.token) {
-          router.push('/')
+          router.push('/dashboard')
         }
       } catch (error) {
         console.error('Register error:', error)
